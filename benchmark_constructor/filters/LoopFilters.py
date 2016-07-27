@@ -1,4 +1,5 @@
 from .Filter import Filter
+from .Loop import Loop
 from .Loop import find_all_loops
 from .Loop import get_long_loops
 from .Crystal import get_crystal_contact_residues 
@@ -67,8 +68,8 @@ class LoopLengthFilter(LoopFilter):
         
 class LoopCrystalContactFilter(LoopFilter):
   '''LoopCrystalContactFilter filters out structures that don't have loops
-     which don't contact asymmetric units. Then remove loops that have contacts
-     from the candidate_loop_list.
+     which don't contact asymmetric units. Loops in the candidate_loop_list are
+     splited if there are residues in the middle of loops have contacts.
   '''
   def __init__(self, cutoff, model=0, chain_list=['A'], pymol_bin='pymol'):
     self.cutoff = cutoff
@@ -87,24 +88,29 @@ class LoopCrystalContactFilter(LoopFilter):
         structure_dict['crystal_contact_res_set'] = get_crystal_contact_residues(structure_dict['path'],
                                                       self.cutoff, model=self.model, chain_list=self.chain_list,
                                                       pymol_bin=self.pymol_bin)
-        
-      # Select loops that don't have crystal contacts
       
-      selected_loops = []
+      # Split loops with contacts
+      
+      new_loop_list = []
       for loop in structure_dict['candidate_loop_list']:
-        if loop.model != self.model or loop.chain not in self.chain_list:
-          continue
-
-        keep_loop = True
-        for i in range(loop.begin, loop.end+1):
+        i = loop.begin
+        
+        while i <= loop.end:
           if (loop.chain, i) in structure_dict['crystal_contact_res_set']:
-            keep_loop = False
-            break
+            i += 1
+            continue
+          begin = i
 
-        if keep_loop:
-          selected_loops.append(loop)
+          while i+1 <= loop.end and (loop.chain, i+1) not in structure_dict['crystal_contact_res_set']:
+            i += 1
 
-      if len(selected_loops) == 0:
+          new_loop_list.append(Loop(begin, i, loop.chain, loop.model))
+          i += 1
+
+
+      # Filter structures
+      
+      if len(new_loop_list) == 0:
         self.remove_structure(info_dict, structure_dict)
       else:
-        structure_dict['candidate_list'] = selected_loops
+        structure_dict['candidate_loop_list'] = new_loop_list
