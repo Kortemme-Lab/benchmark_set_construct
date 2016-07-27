@@ -8,8 +8,8 @@ class Loop:
     self.chain = chain
     self.model = model
 
-  def __str__(self):
-    s = 'Loop: begin {0}, end {1}, chain {2}, model {3}'.format(self.begin,
+  def __repr__(self):
+    s = '<Loop: begin {0}, end {1}, chain {2}, model {3}>'.format(self.begin,
           self.end, self.chain, self.model)
     return s
 
@@ -28,7 +28,7 @@ def find_all_loops(pdb_file):
     keys = list( dssp.keys() )
     if len(keys) == 0: return loop_list
 
-    # Get all transition points of secondary structures. I a residue is neither helix or strand, it is deemed as a part of a loop.
+    # Get all transition points of secondary structures. If a residue is neither helix or strand, it is deemed as a part of a loop.
 
     transition_points = [0]
     
@@ -69,4 +69,4 @@ def Coarse_secondary_structure(ss):
 
 def get_long_loops(loop_list, cutoff):
   '''Get a list of loops that is longer or equal to a cutoff length'''
-  return [ loop for loop in loop_list if loop.end - loop.begin >= cutoff ] 
+  return [ loop for loop in loop_list if loop.end - loop.begin + 1 >= cutoff ] 
