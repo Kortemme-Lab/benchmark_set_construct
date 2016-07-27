@@ -1,5 +1,8 @@
 import Bio.PDB as PDB
 
+from .Chemistry import Coarse_secondary_structure 
+
+
 class Loop:
   '''This is a simple class for a loop on a protein'''
   def __init__(self, begin, end, chain='A', model=0):
@@ -56,15 +59,6 @@ def find_all_loops(pdb_file):
   # The best container for loops is ordered set which is not supported by official python package. So
   # use a list as container as a compromise.
   return loop_list
-
-
-def Coarse_secondary_structure(ss):
-  '''Convert fine grind secondary structures to coarse grind seconday structures'''
-  helices = ['H', 'G', 'I']
-  strands = ['B', 'E']
-  if ss in helices: return 'helix'
-  if ss in strands: return 'strand'
-  return 'loop'
 
 
 def get_long_loops(loop_list, cutoff):

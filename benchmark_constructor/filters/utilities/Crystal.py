@@ -3,6 +3,8 @@ import subprocess
 
 import Bio.PDB as PDB
 
+from .Chemistry import is_heavy_atom_no_water 
+
 
 def create_crystal_packing_file(pdb_file, cutoff, pymol_bin='pymol', refresh=False):
   '''Create pdb files that contain crystal images within a cutoff from the 
@@ -87,16 +89,3 @@ def get_crystal_contact_residues(pdb_file, cutoff, model=0, chain_list=['A'], py
   return res_set
 
 
-def is_heavy_atom_no_water(atom):
-  '''Return true if an atom is a heavy atom and not belongs to a water molecule'''
-  if atom.get_parent().get_resname() == 'HOH':
-    return False
-  
-  name = atom.get_id()
-  if name[0] == 'H':
-    return False
-    
-  if ord(name[0]) >= ord('0') and ord(name[0]) <= ord('9') and name[1] == 'H':
-    return False
-        
-  return True 

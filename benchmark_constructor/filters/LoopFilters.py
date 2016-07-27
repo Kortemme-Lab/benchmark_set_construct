@@ -1,8 +1,8 @@
 from .Filter import Filter
-from .Loop import Loop
-from .Loop import find_all_loops
-from .Loop import get_long_loops
-from .Crystal import get_crystal_contact_residues 
+from .utilities.Loop import Loop
+from .utilities.Loop import find_all_loops
+from .utilities.Loop import get_long_loops
+from .utilities.Crystal import get_crystal_contact_residues 
 
 class LoopFilter(Filter):
   '''Base class of filters that consider properties of loops'''
