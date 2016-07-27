@@ -1,7 +1,7 @@
 import Bio.PDB as PDB
 
 from .Chemistry import Coarse_secondary_structure 
-
+from .metric import residue_group_distance
 
 class Loop:
   '''This is a simple class for a loop on a protein'''
@@ -15,6 +15,10 @@ class Loop:
     s = '<Loop: begin {0}, end {1}, chain {2}, model {3}>'.format(self.begin,
           self.end, self.chain, self.model)
     return s
+
+  def get_res_list(self, structure):
+    '''Get the list of residues of the loop.'''
+    return [structure[self.model][self.chain][i] for i in range(self.begin, self.end+1)] 
 
 
 def find_all_loops(pdb_file):
@@ -63,4 +67,11 @@ def find_all_loops(pdb_file):
 
 def get_long_loops(loop_list, cutoff):
   '''Get a list of loops that is longer or equal to a cutoff length'''
-  return [ loop for loop in loop_list if loop.end - loop.begin + 1 >= cutoff ] 
+  return [ loop for loop in loop_list if loop.end - loop.begin + 1 >= cutoff ]
+  
+  
+def loop_distance(loop1, loop2, structure):
+  '''Calculate the distance between two loops'''
+  return residue_group_distance(loop1.get_res_list(structure),
+                                loop2.get_res_list(structure),
+                                heavy_only=True)
