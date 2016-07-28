@@ -16,7 +16,7 @@ class Loop:
           self.end, self.chain, self.model)
     return s
 
-  def __lt__(loop2):
+  def __lt__(self, loop2):
     if self.model < loop2.model:
       return True
     elif self.model == loop2.model:
@@ -29,7 +29,23 @@ class Loop:
           return self.end < loop2.end
         
     return False
+  
+  def connected(self, loop2, cutoff=1):
+    '''Return true if the sequential distance between loop1 and loop2 is
+       littler than or equal to a cutoff.
+    '''
+    overlap = self.model == loop2.model \
+              and self.chain == loop2.chain \
+              and ((self.begin >= loop2.begin - cutoff and self.begin <= loop2.end + cutoff)
+                   or (self.end >= loop2.begin - cutoff and self.end <= loop2.end + cutoff)
+                   or (loop2.begin >= self.begin - cutoff and loop2.begin <= self.end + cutoff))
+    return overlap
 
+  def chop_up(self, length):
+    '''Chop up the loop into a list of loops with length'''
+    return [ Loop(i, i + length - 1, self.chain, self.model) \
+            for i in range(self.begin, self.end + 1) if i + length - 1 <= self.end ]
+  
   def get_res_list(self, structure):
     '''Get the list of residues of the loop.'''
     return [structure[self.model][self.chain][i] for i in range(self.begin, self.end+1)] 

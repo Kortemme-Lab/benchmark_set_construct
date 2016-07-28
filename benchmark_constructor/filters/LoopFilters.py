@@ -52,9 +52,11 @@ class LoopModelChainFilter(LoopFilter):
 class LoopLengthFilter(LoopFilter):
   '''LoopLengthFilter filters out structures that don't have loops
      longer than a cutoff. Then remove short loops from the candidate_loop_list.
+     If chop=True, chop the loops into loops with length cutoff.
   '''
-  def __init__(self, cutoff):
+  def __init__(self, cutoff, chop=False):
     self.cutoff = cutoff
+    self.chop = chop
 
   def apply(self, info_dict):
     self.get_loops(info_dict)
@@ -63,10 +65,19 @@ class LoopLengthFilter(LoopFilter):
     for structure_dict in info_dict['candidate_list'][:]:
       long_loops = get_long_loops(structure_dict['candidate_loop_list'], self.cutoff)
       
-      if len(long_loops) == 0:
+      # Chop up loops if required
+      
+      selected_loops = []
+      if self.chop:
+        for loop in long_loops:
+          selected_loops += loop.chop_up(self.cutoff)
+      else:
+        selected_loops = long_loops
+      
+      if len(selected_loops) == 0:
         self.remove_structure(info_dict, structure_dict)
       else:
-        structure_dict['candidate_loop_list'] = long_loops
+        structure_dict['candidate_loop_list'] = selected_loops
         
         
 class LoopCrystalContactFilter(LoopFilter):
@@ -122,8 +133,9 @@ class MultipleLoopFilter(LoopFilter):
   '''MultipleLoopFilter select structures that have adjacent loops within
      a cutoff.
   '''
-  def __init__(self, cutoff):
+  def __init__(self, cutoff, sequence_separation=5):
     self.cutoff = cutoff
+    self.sequence_separation = sequence_separation
 
   def apply(self, info_dict):
     self.get_loops(info_dict)
@@ -134,17 +146,23 @@ class MultipleLoopFilter(LoopFilter):
     for structure_dict in info_dict['candidate_list'][:]:
       structure = parser.get_structure('', structure_dict['path'])
 
+      # Create a set to store adjacent loop pairs
+      
+      structure_dict['adjacent_loop_pair_set'] = set()
+
       # Find all loops that have close contact to other loops
 
       selected_loops = []
       for loop1 in structure_dict['candidate_loop_list']:
         for loop2 in structure_dict['candidate_loop_list']:
-          if loop1 == loop2 or loop1.model != loop2.model:
+          if loop1.connected(loop2, self.sequence_separation) or loop1.model != loop2.model:
             continue
 
           if loop_distance(loop1, loop2, structure) <= self.cutoff:
-            selected_loops.append(loop1) # Here only add loop1 so that the order of loops in the list is kept
-            break
+            if loop1 not in selected_loops:
+              selected_loops.append(loop1) # Here only add loop1 so that the order of loops in the list is kept
+            if loop1 < loop2:
+              structure_dict['adjacent_loop_pair_set'].add((loop1, loop2))
             
       if len(selected_loops) == 0:
         self.remove_structure(info_dict, structure_dict)
