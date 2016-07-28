@@ -21,7 +21,8 @@ def is_heavy_atom(atom):
 def Coarse_secondary_structure(ss):
   '''Convert fine grind secondary structures to coarse grind seconday structures'''
   helices = ['H', 'G', 'I']
-  strands = ['B', 'E']
+  #strands = ['B', 'E']
+  strands = ['E'] # No more take isolated beta bridge as strands
   if ss in helices: return 'helix'
   if ss in strands: return 'strand'
   return 'loop'
