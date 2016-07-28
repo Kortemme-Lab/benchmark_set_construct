@@ -1,0 +1,27 @@
+Benchmark set construct
+=======================
+This repository contains scripts that can help you create benchmark data
+set for protein modeling or protein design. 
+
+Dependencies
+------------
+python3
+
+`docopt <http://docopt.org/>`
+
+`Biopython <http://biopython.org/>`
+
+`DSSP <http://swift.cmbi.ru.nl/gv/dssp/>`
+
+`PyMol <https://www.pymol.org>`
+
+Get started
+-----------
+Before diving into how these scripts work, let's try an example first. Make
+sure that the dependency packages and applications are installed. Then run::
+
+  ./run_benchmark_constructor.py my_set job_scripts/multiple_loop.py -a inputs/kic/
+
+This will take a couple of minutes to finish. Then you will find that a `data/0_my_set/`
+directory is created. Inside this directory is the benchmark set constructed by the
+scripts.
