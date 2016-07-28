@@ -1,4 +1,4 @@
-from Chemistry import is_heavy_atom
+from .Chemistry import is_heavy_atom
 
 def residue_pair_distance(res1, res2, heavy_only=True):
   '''Calculate the distance between a pair of atoms. The distance is 

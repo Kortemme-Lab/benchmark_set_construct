@@ -1,7 +1,10 @@
+import Bio.PDB as PDB
+
 from .Filter import Filter
 from .utilities.Loop import Loop
 from .utilities.Loop import find_all_loops
 from .utilities.Loop import get_long_loops
+from .utilities.Loop import loop_distance
 from .utilities.Crystal import get_crystal_contact_residues 
 
 class LoopFilter(Filter):
@@ -107,10 +110,43 @@ class LoopCrystalContactFilter(LoopFilter):
           new_loop_list.append(Loop(begin, i, loop.chain, loop.model))
           i += 1
 
-
       # Filter structures
       
       if len(new_loop_list) == 0:
         self.remove_structure(info_dict, structure_dict)
       else:
         structure_dict['candidate_loop_list'] = new_loop_list
+
+
+class MultipleLoopFilter(LoopFilter):
+  '''MultipleLoopFilter select structures that have adjacent loops within
+     a cutoff.
+  '''
+  def __init__(self, cutoff):
+    self.cutoff = cutoff
+
+  def apply(self, info_dict):
+    self.get_loops(info_dict)
+
+    parser = PDB.PDBParser()
+
+    # Iterate through a copy of the list, because the list might be modified
+    for structure_dict in info_dict['candidate_list'][:]:
+      structure = parser.get_structure('', structure_dict['path'])
+
+      # Find all loops that have close contact to other loops
+
+      selected_loops = []
+      for loop1 in structure_dict['candidate_loop_list']:
+        for loop2 in structure_dict['candidate_loop_list']:
+          if loop1 == loop2 or loop1.model != loop2.model:
+            continue
+
+          if loop_distance(loop1, loop2, structure) <= self.cutoff:
+            selected_loops.append(loop1) # Here only add loop1 so that the order of loops in the list is kept
+            break
+            
+      if len(selected_loops) == 0:
+        self.remove_structure(info_dict, structure_dict)
+      else:
+        structure_dict['candidate_loop_list'] == selected_loops 

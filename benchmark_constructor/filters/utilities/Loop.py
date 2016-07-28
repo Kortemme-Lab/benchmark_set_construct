@@ -16,6 +16,20 @@ class Loop:
           self.end, self.chain, self.model)
     return s
 
+  def __lt__(loop2):
+    if self.model < loop2.model:
+      return True
+    elif self.model == loop2.model:
+      if self.chain < loop2.chain:
+        return True
+      elif self.chain == loop2.chain:
+        if self.begin < loop2.begin:
+          return True
+        elif self.begin == loop2.begin:
+          return self.end < loop2.end
+        
+    return False
+
   def get_res_list(self, structure):
     '''Get the list of residues of the loop.'''
     return [structure[self.model][self.chain][i] for i in range(self.begin, self.end+1)] 
