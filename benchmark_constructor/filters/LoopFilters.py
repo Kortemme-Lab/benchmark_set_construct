@@ -149,4 +149,4 @@ class MultipleLoopFilter(LoopFilter):
       if len(selected_loops) == 0:
         self.remove_structure(info_dict, structure_dict)
       else:
-        structure_dict['candidate_loop_list'] == selected_loops 
+        structure_dict['candidate_loop_list'] = selected_loops 
