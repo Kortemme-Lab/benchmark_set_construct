@@ -7,13 +7,13 @@ Dependencies
 ------------
 python3
 
-`docopt <http://docopt.org/>`
+`docopt <http://docopt.org/>`_
 
-`Biopython <http://biopython.org/>`
+`Biopython <http://biopython.org/>`_
 
-`DSSP <http://swift.cmbi.ru.nl/gv/dssp/>`
+`DSSP <http://swift.cmbi.ru.nl/gv/dssp/>`_
 
-`PyMol <https://www.pymol.org>`
+`PyMol <https://www.pymol.org>`_
 
 Get started
 -----------
@@ -22,6 +22,6 @@ sure that the dependency packages and applications are installed. Then run::
 
   ./run_benchmark_constructor.py my_set job_scripts/multiple_loop.py -a inputs/kic/
 
-This will take a couple of minutes to finish. Then you will find that a `data/0_my_set/`
+This will take a couple of minutes to finish. Then you will find that a :code:`data/0_my_set/`
 directory is created. Inside this directory is the benchmark set constructed by the
 scripts.
