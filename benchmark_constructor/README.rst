@@ -1,5 +1,5 @@
 Benchmark constructor
----------------------
+=====================
 This module provides a set of tools for protein benchmark set construction.
 
 Data structure
