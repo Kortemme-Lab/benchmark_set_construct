@@ -2,8 +2,7 @@ Rules for writing a new structure collector
 -------------------------------------------
 1. All structure collectors should be derived from StructureCollector.
 
-2. A structure collector should have an :code:`apply(self)` function that do the 
-  collecting job and return a candidate list with this format::
+2. A structure collector should have an :code:`apply(self)` function that do the collecting job and return a candidate list with this format::
 
     [
       {
