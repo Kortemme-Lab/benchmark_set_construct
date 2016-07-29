@@ -15,7 +15,8 @@ python3
 
 `PyMol <https://www.pymol.org>`_
 
-You can use the :code:`dependencies/install_dependencies.py` script to install Biopython and docopt. But you need to install DSSP and PyMol yourself.
+You can use the :code:`dependencies/install_dependencies.py` script to install Biopython and docopt.
+It can also download DSSP for you. But you need to install DSSP and PyMol yourself.
 Get started
 -----------
 Before diving into how these scripts work, let's try an example first. Make
