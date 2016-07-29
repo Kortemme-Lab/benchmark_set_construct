@@ -28,8 +28,8 @@ def create_crystal_packing_file(pdb_file, cutoff, pymol_bin='pymol', refresh=Fal
   pymol_script = '\n'.join(['from pymol import cmd',
                             'load {0}, native'.format(pdb_file),
                             'symexp X_, native, all, {0}'.format(cutoff),
-                            'sym_objs = cmd.get_object_list(\'X_*\')',
-                            'for i, obj in enumerate(sym_objs): cmd.save(\'{0}\' + \'/\' + obj + \'.pdb\', obj)'.format(new_pdb_path)])
+                            'sym_objs = cmd.get_object_list(\'(X_*)\')',
+                            'for obj in sym_objs: cmd.save(\'{0}\' + \'/\' + obj + \'.pdb\', obj)'.format(new_pdb_path)])
 
   with open(pymol_script_name, 'w') as ps:
     ps.write(pymol_script)
