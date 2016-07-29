@@ -20,15 +20,14 @@ if __name__ == '__main__':
 
   filters = [ BC.filters.ResolutionFilter(2),
               BC.filters.LoopModelChainFilter(0, 'A'),
-              BC.filters.LoopCrystalContactFilter(4, model=0, chain_list=['A'], pymol_bin='pymol'),
-              BC.filters.LoopLengthFilter(12, chop=True),
-              BC.filters.MultipleLoopFilter(4, sequence_separation=5)
+              #BC.filters.LoopCrystalContactFilter(4, model=0, chain_list=['A'], pymol_bin='pymol'),
+              #BC.filters.LoopLengthFilter(12, chop=True),
+              #BC.filters.MultipleLoopFilter(4, sequence_separation=5)
               ] 
   
   # Register normalizers
   
-  normalizers = [ BC.file_normalizers.LoopFileNormalizer(),
-                  #BC.file_normalizers.ContactSelectFileNormalizer()
+  normalizers = [ BC.file_normalizers.RosettaLoopNormalizer(),
                   ] 
  
   # Apply everything
