@@ -15,6 +15,7 @@ python3
 
 `PyMol <https://www.pymol.org>`_
 
+You can use the :code:`dependencies/install_dependencies.py` script to install Biopython and docopt. But you need to install DSSP and PyMol yourself.
 Get started
 -----------
 Before diving into how these scripts work, let's try an example first. Make
@@ -25,3 +26,7 @@ sure that the dependency packages and applications are installed. Then run::
 This will take a couple of minutes to finish. Then you will find that a :code:`data/0_my_set/`
 directory is created. Inside this directory is the benchmark set constructed by the
 scripts.
+
+How does it work?
+-----------------
+
