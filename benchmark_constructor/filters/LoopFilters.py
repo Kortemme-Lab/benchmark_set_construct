@@ -85,13 +85,14 @@ class LoopLengthFilter(LoopFilter):
         
 class LoopCrystalContactFilter(LoopFilter):
   '''LoopCrystalContactFilter filters out structures that don't have loops
-     which don't contact asymmetric units. Loops in the candidate_loop_list are
+     which don't contact asymmetric units. Use can ask loops in the candidate_loop_list to be 
      splited if there are residues in the middle of loops have contacts.
   '''
-  def __init__(self, cutoff, model=0, chain_list=['A'], pymol_bin='pymol'):
+  def __init__(self, cutoff, model=0, chain_list=['A'], split_loop=False, pymol_bin='pymol'):
     self.cutoff = cutoff
     self.model = model
     self.chain_list = chain_list
+    self.split_loop = split_loop
     self.pymol_bin = pymol_bin
 
   def apply(self, info_dict):
@@ -106,23 +107,36 @@ class LoopCrystalContactFilter(LoopFilter):
                                                       self.cutoff, model=self.model, chain_list=self.chain_list,
                                                       pymol_bin=self.pymol_bin)
       
-      # Split loops with contacts
+      # Get the new loop list
       
       new_loop_list = []
       for loop in structure_dict['candidate_loop_list']:
-        i = loop.begin
+      
+        # Split loops with contacts if required
+       
+        if self.split_loop:
         
-        while i <= loop.end:
-          if (loop.chain, i) in structure_dict['crystal_contact_res_set']:
-            i += 1
-            continue
-          begin = i
+          i = loop.begin
+          
+          while i <= loop.end:
+            if (loop.chain, i) in structure_dict['crystal_contact_res_set']:
+              i += 1
+              continue
+            begin = i
 
-          while i+1 <= loop.end and (loop.chain, i+1) not in structure_dict['crystal_contact_res_set']:
+            while i+1 <= loop.end and (loop.chain, i+1) not in structure_dict['crystal_contact_res_set']:
+              i += 1
+
+            new_loop_list.append(Loop(begin, i, loop.chain, loop.model))
             i += 1
 
-          new_loop_list.append(Loop(begin, i, loop.chain, loop.model))
-          i += 1
+        else:
+          for i in range(loop.begin, loop.end+1):
+            if (loop.chain, i) in structure_dict['crystal_contact_res_set']:
+              break
+
+            if i == loop.end:
+              new_loop_list.append(loop)
 
       # Filter structures
       

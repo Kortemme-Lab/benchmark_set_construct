@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
   filters = [ BC.filters.ResolutionFilter(2),
               BC.filters.LoopModelChainFilter(0, 'A'),
-              #BC.filters.LoopCrystalContactFilter(4, model=0, chain_list=['A'], pymol_bin='pymol'),
+              BC.filters.LoopCrystalContactFilter(4, model=0, chain_list=['A'], pymol_bin='pymol'),
               BC.filters.LoopLengthFilter(12, 12),
               #BC.filters.MultipleLoopFilter(4, sequence_separation=5)
               ] 
@@ -29,7 +29,7 @@ if __name__ == '__main__':
   
   normalizers = [ BC.file_normalizers.RosettaLoopNormalizer(),
                   # If you have the clean_pdb.py script from Rosetta tools. Uncomment the following line and change path to where the script is.
-                  BC.file_normalizers.RosettaCleanPDBNormalizer('/kortemmelab/home/xingjiepan/Softwares/Rosetta/tools/protein_tools/scripts/clean_pdb.py'),
+                  #BC.file_normalizers.RosettaCleanPDBNormalizer('/kortemmelab/home/xingjiepan/Softwares/Rosetta/tools/protein_tools/scripts/clean_pdb.py'),
                   ] 
  
   # Apply everything
