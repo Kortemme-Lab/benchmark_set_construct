@@ -95,9 +95,10 @@ def find_all_loops(pdb_file):
   return loop_list
 
 
-def get_long_loops(loop_list, cutoff):
-  '''Get a list of loops that is longer or equal to a cutoff length'''
-  return [ loop for loop in loop_list if loop.end - loop.begin + 1 >= cutoff ]
+def get_loops_in_length_range(loop_list, cutoff_low, cutoff_high):
+  '''Get a list of loops whose range is in the [cutoff_low, cutoff_high]'''
+  return [ loop for loop in loop_list if loop.end - loop.begin + 1 >= cutoff_low \
+                                         and loop.end - loop.begin + 1 <= cutoff_high ]
   
   
 def loop_distance(loop1, loop2, structure):

@@ -3,7 +3,7 @@ import Bio.PDB as PDB
 from .Filter import Filter
 from .utilities.Loop import Loop
 from .utilities.Loop import find_all_loops
-from .utilities.Loop import get_long_loops
+from .utilities.Loop import get_loops_in_length_range
 from .utilities.Loop import loop_distance
 from .utilities.Crystal import get_crystal_contact_residues 
 
@@ -51,11 +51,13 @@ class LoopModelChainFilter(LoopFilter):
 
 class LoopLengthFilter(LoopFilter):
   '''LoopLengthFilter filters out structures that don't have loops
-     longer than a cutoff. Then remove short loops from the candidate_loop_list.
-     If chop=True, chop the loops into loops with length cutoff.
+     within the [cutoff_low, cutoff_high] range. Then remove short loops
+     from the candidate_loop_list. If chop=True, chop the loops into 
+     loops with length cutoff.
   '''
-  def __init__(self, cutoff, chop=False):
-    self.cutoff = cutoff
+  def __init__(self, cutoff_low, cutoff_high=float('inf'), chop=False):
+    self.cutoff_low = cutoff_low
+    self.cutoff_high = cutoff_high
     self.chop = chop
 
   def apply(self, info_dict):
@@ -63,14 +65,15 @@ class LoopLengthFilter(LoopFilter):
 
     # Iterate through a copy of the list, because the list might be modified
     for structure_dict in info_dict['candidate_list'][:]:
-      long_loops = get_long_loops(structure_dict['candidate_loop_list'], self.cutoff)
+      long_loops = get_loops_in_length_range(structure_dict['candidate_loop_list'],
+                                             self.cutoff_low, self.cutoff_high)
       
       # Chop up loops if required
       
       selected_loops = []
       if self.chop:
         for loop in long_loops:
-          selected_loops += loop.chop_up(self.cutoff)
+          selected_loops += loop.chop_up(self.cutoff_low)
       else:
         selected_loops = long_loops
       
