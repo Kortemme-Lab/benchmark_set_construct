@@ -56,3 +56,45 @@ def Coarse_secondary_structure(ss):
   return 'loop'
 
 
+def find_secondary_structures(pdb_file, required_ss_type, SSClass):
+  '''Return a list of specific secondary structures.'''
+  s_structure_list = []
+  
+  parser = PDB.PDBParser()
+  structure = parser.get_structure('', pdb_file)
+ 
+  for model_id, model in enumerate(structure):
+    # Calculate the secondary structures of a model with DSSP
+
+    dssp = PDB.DSSP(model, pdb_file)
+    keys = list( dssp.keys() )
+    if len(keys) == 0: return s_structure_list
+
+    # Get all transition points of secondary structures. If a residue is neither helix or strand, it is deemed as a part of a s_structure.
+
+    transition_points = [0]
+    
+    for i in range(1, len(keys)):
+      res_info = dssp[keys[i]]
+      res_info_prev = dssp[keys[i-1]]
+      
+      if keys[i][0] != keys[i-1][0] \
+         or keys[i][1][1] != keys[i-1][1][1] + 1 \
+         or Coarse_secondary_structure(res_info[2]) != Coarse_secondary_structure(res_info_prev[2]):
+         transition_points.append(i)
+    
+    # Get required secondary structures
+    
+    for i, t in enumerate(transition_points):
+      ss_type = Coarse_secondary_structure( dssp[keys[t]][2] )
+      if ss_type != required_ss_type: continue
+
+      chain = keys[t][0]
+      start = keys[t][1][1]
+      end = keys[transition_points[i+1] - 1][1][1] if i < len(transition_points)-1 else keys[-1][1][1] 
+
+      s_structure_list.append(SSClass(start, end, chain=chain, model=model_id))
+
+  # The best container for s_structures is ordered set which is not supported by official python package. So
+  # use a list as container as a compromise.
+  return s_structure_list
