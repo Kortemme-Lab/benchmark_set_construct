@@ -18,6 +18,11 @@ class LoopFileNormalizer(FileNormalizer):
     cmd = 'select loops,'
     for loop in candidate_loop_list:
       cmd += ' res {0}-{1} and chain {2}'.format(loop.begin, loop.end, loop.chain)
+    cmd += '\n' 
+    
+    cmd += 'hide all\n'
+    cmd += 'show cartoon\n'
+    cmd += 'color magenta, loops and name c*\n' 
     
     with open(script_path, 'w') as f:
         f.write(cmd)
