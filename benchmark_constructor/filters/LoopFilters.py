@@ -254,7 +254,7 @@ class StructuredLoopFilter(LoopFilter):
         if loop.model != self.model: continue
         if loop.length() + self.min_num_ss > self.extended_length: continue
      
-        max_num_ss = 0
+        max_num_ss = -1
         best_window_start = 0
         
         # Use a sliding window to find the way to extend the loop that maximize the number of secondary structures
@@ -268,7 +268,7 @@ class StructuredLoopFilter(LoopFilter):
             # Break if cannot extend the loop
 
             if not structure[self.model][loop.chain].has_id(j):
-              num_ss = 0
+              num_ss = -1
               break
             
             if Coarse_secondary_structure(dssp[(loop.chain, (' ', j, ' '))][2]) != 'loop':
