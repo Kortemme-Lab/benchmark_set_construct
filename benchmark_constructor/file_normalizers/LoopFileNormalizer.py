@@ -1,5 +1,8 @@
 import os
 
+import Bio.PDB as PDB
+
+from .utilities.metric import get_residues_nearby
 from .FileNormalizer import FileNormalizer
 
 class LoopFileNormalizer(FileNormalizer):
@@ -47,3 +50,77 @@ class LoopFileNormalizer(FileNormalizer):
         nlp = structure_dict['name'] + '_adjacent_pairs.loop'
         self.normalize_adjacent_loop_pairs(os.path.join(d, nlp), structure_dict['adjacent_loop_pair_set'])
 
+
+class LoopTrimNormalizer(FileNormalizer):
+  '''LoopTrimNormalizer creates a new PDB file whose loop is replaced by a
+     straight line and the side chains of residues within a cutoff from
+     the loop are trimed.
+  '''
+  def __init__(self, cutoff):
+    self.cutoff = cutoff
+
+  def trim_one_residue(self, residue, atom_list):
+    new_res = PDB.Residue.Residue(residue.get_id(), residue.get_resname(), residue.get_segid())
+    
+    for keep_atom in atom_list: 
+      if keep_atom in residue:
+        new_res.add(residue[keep_atom])
+  
+    chain = residue.get_parent()
+    chain.detach_child(residue.get_id())
+    chain.add(new_res)
+
+  def straightify_loop(self, structure, loop):
+    line_begin = structure[loop.model][loop.chain][loop.begin]['CA'].coord
+    line_end = structure[loop.model][loop.chain][loop.end]['CA'].coord
+    line_vect = line_end - line_begin
+    seg_vect = line_vect / (loop.end - loop.begin)
+
+    structure[loop.model][loop.chain][loop.begin]['C'].coord = line_begin \
+        + 1.0/3 * seg_vect
+
+    for seqpos in range(loop.begin + 1, loop.end):
+      structure[loop.model][loop.chain][seqpos]['CA'].coord = line_begin \
+            + (seqpos - loop.begin) * seg_vect
+      structure[loop.model][loop.chain][seqpos]['C'].coord = line_begin \
+            + (seqpos - loop.begin + 1.0/3 ) * seg_vect
+      structure[loop.model][loop.chain][seqpos]['N'].coord = line_begin \
+            + (seqpos - loop.begin - 1.0/3 ) * seg_vect
+    
+    structure[loop.model][loop.chain][loop.end]['N'].coord = line_end \
+        - 1.0/3 * seg_vect
+
+
+  def normalize_one_loop(self, structure, loop):
+    loop_residues = [structure[loop.model][loop.chain][seqpos] for seqpos in range(loop.begin, loop.end + 1)]
+    
+    # Remove the side chains of residues within self.cutoff
+    
+    nearby_residues = get_residues_nearby(loop_residues, structure, self.cutoff) 
+    
+    for res in nearby_residues:
+      self.trim_one_residue(res, ['CA', 'C', 'N', 'O', 'H'])
+
+    # Only keep the mainchain atoms of the loop
+    
+    for res in loop_residues:
+      self.trim_one_residue(res, ['CA', 'C', 'N']) 
+    
+    # Make the loop a straight line
+
+    self.straightify_loop(structure, loop)
+
+  def apply(self, info_dict):
+    parser = PDB.PDBParser()
+    io = PDB.PDBIO()
+
+    for structure_dict in info_dict['candidate_list']:
+      structure = parser.get_structure('', structure_dict['path'])
+      
+      for loop in structure_dict['candidate_loop_list']:
+        
+        self.normalize_one_loop(structure, loop)
+        
+      io.set_structure(structure)
+      d = os.path.dirname(structure_dict['path'])
+      io.save(os.path.join(d, structure_dict['name'] + '_trimed.pdb')) 

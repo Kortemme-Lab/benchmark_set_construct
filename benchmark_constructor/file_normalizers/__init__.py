@@ -1,5 +1,7 @@
 from .LoopFileNormalizer import LoopFileNormalizer
 
+from .LoopFileNormalizer import LoopTrimNormalizer
+
 from .ContactSelectFileNormalizer import ContactSelectFileNormalizer
 
 from .RosettaFileNormalizer import RosettaLoopNormalizer
