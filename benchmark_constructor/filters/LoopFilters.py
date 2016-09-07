@@ -263,17 +263,20 @@ class StructuredLoopFilter(LoopFilter):
         window_last = loop.begin
 
         for i in range(window_first, window_last + 1):
-          if structure[self.model][loop.chain].has_id(i) \
-             and structure[self.model][loop.chain].has_id(i + self.extended_length - 1):
+          num_ss = 0
+          for j in range(i, i + self.extended_length):
+            # Break if cannot extend the loop
 
-            num_ss = 0
-            for j in range(i, i + self.extended_length):
-              if Coarse_secondary_structure(dssp[(loop.chain, (' ', j, ' '))][2]) != 'loop':
-                num_ss += 1
+            if not structure[self.model][loop.chain].has_id(j):
+              num_ss = 0
+              break
+            
+            if Coarse_secondary_structure(dssp[(loop.chain, (' ', j, ' '))][2]) != 'loop':
+              num_ss += 1
 
-            if num_ss > max_num_ss:
-              max_num_ss = num_ss
-              best_window_start = i
+          if num_ss > max_num_ss:
+            max_num_ss = num_ss
+            best_window_start = i
 
         # Keep the loop if the number of secondary structures meet our requirement 
 
