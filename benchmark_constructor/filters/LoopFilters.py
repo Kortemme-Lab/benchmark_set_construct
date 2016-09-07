@@ -6,6 +6,7 @@ from .utilities.Loop import find_all_loops
 from .utilities.Loop import get_loops_in_length_range
 from .utilities.Loop import loop_distance
 from .utilities.Crystal import get_crystal_contact_residues 
+from .utilities.SecondaryStructure import Coarse_secondary_structure
 
 class LoopFilter(Filter):
   '''Base class of filters that consider properties of loops'''
@@ -184,4 +185,71 @@ class MultipleLoopFilter(LoopFilter):
       if len(selected_loops) == 0:
         self.remove_structure(info_dict, structure_dict)
       else:
-        structure_dict['candidate_loop_list'] = selected_loops 
+        structure_dict['candidate_loop_list'] = selected_loops
+        
+
+class StructuredLoopFilter(LoopFilter):
+  '''Get a set of structured loops by extending a given set of loops.
+     The length of extended loop is given by extended_length and at least
+     min_num_ss secondary structures should exist in the extended loop.
+  '''   
+  def __init__(self, extended_length, min_num_ss, model=0):
+    self.extended_length = extended_length
+    self.min_num_ss = min_num_ss
+    self.model = model
+
+  def apply(self, info_dict):
+    self.get_loops(info_dict)
+    
+    parser = PDB.PDBParser()
+    
+    # Iterate through a copy of the list, because the list might be modified
+    for structure_dict in info_dict['candidate_list'][:]:
+      structure = parser.get_structure('', structure_dict['path'])
+
+      # Create a list to store structured_loops
+      
+      structured_loops = []
+
+      # Get the DSSP of this structure
+
+      dssp = PDB.DSSP(structure[self.model], structure_dict['path'])
+    
+      # Find all structured loops
+     
+      for loop in structure_dict['candidate_loop_list']:
+        if loop.model != self.model: continue
+        if loop.length() + self.min_num_ss > self.extended_length: continue
+     
+        max_num_ss = 0
+        best_window_start = 0
+        
+        # Use a sliding window to find the way to extend the loop that maximize the number of secondary structures
+        
+        window_first = loop.begin - (self.extended_length - loop.length())
+        window_last = loop.begin
+
+        for i in range(window_first, window_last + 1):
+          if structure[self.model][loop.chain].has_id(i) \
+             and structure[self.model][loop.chain].has_id(i + self.extended_length - 1):
+
+            num_ss = 0
+            for j in range(i, i + self.extended_length):
+              if Coarse_secondary_structure(dssp[(loop.chain, (' ', j, ' '))][2]) != 'loop':
+                num_ss += 1
+
+            if num_ss > max_num_ss:
+              max_num_ss = num_ss
+              best_window_start = i
+
+        # Keep the loop if the number of secondary structures meet our requirement 
+
+        if max_num_ss >= self.min_num_ss:
+          structured_loops.append(Loop(best_window_start, best_window_start + self.extended_length - 1,
+                                       loop.chain, loop.model))
+      
+      
+      if len(structured_loops) == 0:
+        self.remove_structure(info_dict, structure_dict)
+      else:
+        structure_dict['candidate_loop_list'] = structured_loops 

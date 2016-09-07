@@ -8,6 +8,8 @@ from .LoopFilters import LoopCrystalContactFilter
 
 from .LoopFilters import MultipleLoopFilter
 
+from .LoopFilters import StructuredLoopFilter
+
 #from . import Loop ###DEBUG
 
 #from .Crystal import create_crystal_packing_file ###DEBUG

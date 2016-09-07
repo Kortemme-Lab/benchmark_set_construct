@@ -25,6 +25,9 @@ class SecondaryStructure:
         
     return False
   
+  def length(self):
+    return self.end - self.begin + 1
+  
   def connected(self, s_structure2, cutoff=1):
     '''Return true if the sequential distance between secondary structure1 and 
        secondary structure2 is littler than or equal to a cutoff.
