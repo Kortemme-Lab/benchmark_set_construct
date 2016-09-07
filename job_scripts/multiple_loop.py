@@ -21,8 +21,10 @@ if __name__ == '__main__':
   filters = [ BC.filters.ResolutionFilter(2),
               BC.filters.LoopModelChainFilter(0, 'A'),
               BC.filters.LoopCrystalContactFilter(4, model=0, chain_list=['A'], pymol_bin='pymol'),
-              BC.filters.LoopLengthFilter(12, 12),
-              #BC.filters.MultipleLoopFilter(4, sequence_separation=5)
+              BC.filters.LoopLengthFilter(9, 12),
+              BC.filters.StructuredLoopFilter(12, 0, model=0),
+              BC.filters.TerminalLoopFilter(5),
+              BC.filters.MultipleLoopFilter(4, sequence_separation=5),
               ] 
   
   # Register normalizers
