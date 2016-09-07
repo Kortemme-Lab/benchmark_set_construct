@@ -186,7 +186,40 @@ class MultipleLoopFilter(LoopFilter):
         self.remove_structure(info_dict, structure_dict)
       else:
         structure_dict['candidate_loop_list'] = selected_loops
+       
+       
+class TerminalLoopFilter(LoopFilter):
+  '''Filter loops that are within a cutoff from terminus.'''
+  def __init__(self, cutoff=1):
+    self.cutoff = cutoff
+
+  def apply(self, info_dict):
+    self.get_loops(info_dict)
+
+    parser = PDB.PDBParser()
+    
+    # Iterate through a copy of the list, because the list might be modified
+    for structure_dict in info_dict['candidate_list'][:]:
+      structure = parser.get_structure('', structure_dict['path'])
+      
+      selected_loops = []
+      for loop in structure_dict['candidate_loop_list']:
+        keep_loop = True
         
+        for i in range(1, self.cutoff + 1):
+          if (not structure[loop.model][loop.chain].has_id(loop.begin - i) ) \
+             or (not structure[loop.model][loop.chain].has_id(loop.end + i) ):
+            keep_loop = False
+            break
+
+        if keep_loop:
+          selected_loops.append(loop)
+      
+      if len(selected_loops) == 0:
+        self.remove_structure(info_dict, structure_dict)
+      else:
+        structure_dict['candidate_loop_list'] = selected_loops
+
 
 class StructuredLoopFilter(LoopFilter):
   '''Get a set of structured loops by extending a given set of loops.

@@ -8,6 +8,8 @@ from .LoopFilters import LoopCrystalContactFilter
 
 from .LoopFilters import MultipleLoopFilter
 
+from .LoopFilters import TerminalLoopFilter
+
 from .LoopFilters import StructuredLoopFilter
 
 #from . import Loop ###DEBUG
