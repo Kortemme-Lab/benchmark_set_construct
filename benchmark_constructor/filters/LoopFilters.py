@@ -288,4 +288,20 @@ class StructuredLoopFilter(LoopFilter):
       if len(structured_loops) == 0:
         self.remove_structure(info_dict, structure_dict)
       else:
-        structure_dict['candidate_loop_list'] = structured_loops 
+        structure_dict['candidate_loop_list'] = structured_loops
+        
+        
+class DiscardLoopFilter(LoopFilter):
+  '''DiscardLoopFilter keep num_keep of loops and discard the rest of loops.'''
+  def __init__(self, num_keep):
+    self.num_keep = num_keep
+    
+  def apply(self, info_dict):
+    self.get_loops(info_dict)
+      
+    for structure_dict in info_dict['candidate_list']:
+      if len(structure_dict['candidate_loop_list']) > self.num_keep:
+        structure_dict['candidate_loop_list'] = structure_dict['candidate_loop_list'][0:self.num_keep]
+
+
+
