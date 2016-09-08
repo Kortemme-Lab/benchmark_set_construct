@@ -329,5 +329,5 @@ class LoopDepthFilter(LoopFilter):
 
         loop_depth_list.append((loop, depth))
 
-      structure_dict['candidate_loop_list'] = [ld[1] for ld in sorted(loop_depth_list,
+      structure_dict['candidate_loop_list'] = [ld[0] for ld in sorted(loop_depth_list,
                                                 key=lambda x:x[1])[0:self.num_keep]]
