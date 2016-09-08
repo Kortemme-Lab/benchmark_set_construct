@@ -52,3 +52,16 @@ def get_residues_nearby(res_list, structure, cutoff):
                        for atom in ns.search(center_atom.coord, cutoff, 'A')} 
 
   return list(nearby_residues)
+
+
+def get_residues_depth(res_list, model, pdb_file):
+  '''Get the average depth of a list of residues. The msms program is required.
+  '''
+  rd = PDB.ResidueDepth(model, pdb_file)
+  
+  depth_list = []
+  for res in res_list:
+    res_id = (res.get_parent().get_id(), res.get_id())
+    depth_list.append(rd[res_id][0] if res_id in rd else 0)
+
+  return sum(depth_list)/len(res_list)
