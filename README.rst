@@ -13,10 +13,12 @@ python3
 
 `DSSP <http://swift.cmbi.ru.nl/gv/dssp/>`_
 
+`MSMS <http://mgl.scripps.edu/people/sanner/html/msms_home.html>`_
+
 `PyMol <https://www.pymol.org>`_
 
 You can use the :code:`dependencies/install_dependencies.py` script to install Biopython and docopt.
-It can also download DSSP for you. But you need to install DSSP and PyMol yourself (make sure that dssp
+It can also download DSSP for you. But you need to install DSSP, MSMS and PyMol yourself (make sure that dssp, msms
 and pymol are in your PATH).
 
 Get started
