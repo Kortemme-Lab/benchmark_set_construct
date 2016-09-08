@@ -7,6 +7,7 @@ from .utilities.Loop import get_loops_in_length_range
 from .utilities.Loop import loop_distance
 from .utilities.Crystal import get_crystal_contact_residues 
 from .utilities.SecondaryStructure import Coarse_secondary_structure
+from .utilities.metric import get_residues_depth 
 
 class LoopFilter(Filter):
   '''Base class of filters that consider properties of loops'''
@@ -304,4 +305,29 @@ class DiscardLoopFilter(LoopFilter):
         structure_dict['candidate_loop_list'] = structure_dict['candidate_loop_list'][0:self.num_keep]
 
 
+class LoopDepthFilter(LoopFilter):
+  '''Keep the num_keep loops with the lowest depth.'''
+  def __init__(self, num_keep):
+    self.num_keep = num_keep
+    
+  def apply(self, info_dict): 
+    self.get_loops(info_dict)
+    
+    parser = PDB.PDBParser()
 
+    for structure_dict in info_dict['candidate_list']:
+      structure = parser.get_structure('', structure_dict['path'])
+
+      if len(structure_dict['candidate_loop_list']) <= self.num_keep: continue
+      
+      loop_depth_list = []
+      
+      for loop in structure_dict['candidate_loop_list']:
+        res_list = [structure[loop.model][loop.chain][seqpos] for seqpos in range(loop.begin, loop.end + 1)]
+
+        depth = get_residues_depth(res_list, structure[loop.model], structure_dict['path'])
+
+        loop_depth_list.append((loop, depth))
+
+      structure_dict['candidate_loop_list'] = [ld[1] for ld in sorted(loop_depth_list,
+                                                key=lambda x:x[1])[0:self.num_keep]]
