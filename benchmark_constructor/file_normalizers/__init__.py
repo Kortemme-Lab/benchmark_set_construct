@@ -4,6 +4,10 @@ from .LoopFileNormalizer import LoopTrimNormalizer
 
 from .ContactSelectFileNormalizer import ContactSelectFileNormalizer
 
+from .MakeNativeCopyNormalizer import MakeNativeCopyNormalizer
+
 from .RosettaFileNormalizer import RosettaLoopNormalizer
 
 from .RosettaFileNormalizer import RosettaCleanPDBNormalizer
+
+from .PackRotamerNormalizer import PackRotamerNormalizer
