@@ -4,6 +4,7 @@ import Bio.PDB as PDB
 
 from .utilities.metric import get_residues_nearby
 from .FileNormalizer import FileNormalizer
+from .FileNormalizer import UpdatePDBNormalizer
 
 class LoopFileNormalizer(FileNormalizer):
   '''LoopFileNormalizer creates Rosetta loop files based on the
@@ -51,7 +52,7 @@ class LoopFileNormalizer(FileNormalizer):
         self.normalize_adjacent_loop_pairs(os.path.join(d, nlp), structure_dict['adjacent_loop_pair_set'])
 
 
-class LoopTrimNormalizer(FileNormalizer):
+class LoopTrimNormalizer(UpdatePDBNormalizer):
   '''LoopTrimNormalizer creates a new PDB file whose loop is replaced by a
      straight line and the side chains of residues within a cutoff from
      the loop are trimed.
@@ -122,5 +123,7 @@ class LoopTrimNormalizer(FileNormalizer):
         self.normalize_one_loop(structure, loop)
         
       io.set_structure(structure)
-      d = os.path.dirname(structure_dict['path'])
-      io.save(os.path.join(d, structure_dict['name'] + '_trimed.pdb')) 
+      tmp_pdb = os.path.join(os.path.dirname(structure_dict['path']), structure_dict['name'] + '_trimed.pdb')
+      io.save(tmp_pdb)
+      
+      self.update_pdb(tmp_pdb,structure_dict['path']) 

@@ -4,6 +4,7 @@ import subprocess
 import Bio.PDB as PDB
 
 from .FileNormalizer import FileNormalizer
+from .FileNormalizer import UpdatePDBNormalizer
 from .LoopFileNormalizer import LoopFileNormalizer
 from .utilities.Loop import Loop
 
@@ -88,7 +89,7 @@ class RosettaLoopNormalizer(RosettaFileNormalizer, LoopFileNormalizer):
         self.normalize_adjacent_loop_pairs(os.path.join(d, nlp), set(rosetta_loop_pair_list))
 
 
-class RosettaCleanPDBNormalizer(RosettaFileNormalizer):
+class RosettaCleanPDBNormalizer(RosettaFileNormalizer, UpdatePDBNormalizer):
   '''RosettaCleanPDBNormalizer create a new PDB file that is cleaned up for Rosetta.
      The clean_pdb.py script of Rosetta tools is required.
   '''
@@ -105,12 +106,12 @@ class RosettaCleanPDBNormalizer(RosettaFileNormalizer):
   
       subprocess.check_call(['python2.7', self.clean_script_path,
                              structure_dict['name']+'.pdb', 'ignorechain'])
-  
-      os.rename(structure_dict['name'] + '_ignorechain.pdb',
-                structure_dict['name'] + '_rosetta.pdb')
                    
       # Remove the FASTA file which is a by-product of clean_pdb.py
   
       os.remove(structure_dict['name'] + '_ignorechain.fasta')
 
+      # Update the pdb file
+
+      self.update_pdb(structure_dict['name'] + '_ignorechain.pdb', structure_dict['name'] + '.pdb')
       os.chdir(cwd)
