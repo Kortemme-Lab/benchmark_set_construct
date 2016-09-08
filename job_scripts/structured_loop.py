@@ -24,7 +24,7 @@ if __name__ == '__main__':
               BC.filters.StructuredLoopFilter(12, 5, model=0),
               BC.filters.LoopCrystalContactFilter(4, model=0, chain_list=['A'], pymol_bin='pymol'),
               BC.filters.TerminalLoopFilter(5),
-							BC.filters.DiscardLoopFilter(1),
+							BC.filters.LoopDepthFilter(1),
               ] 
   
   # Register normalizers
