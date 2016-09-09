@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
   # Register filters
 
-  filters = [ BC.filters.ResolutionFilter(2.0),
+  filters = [ BC.filters.ResolutionFilter(1.5),
               BC.filters.LoopModelChainFilter(0, 'A'),
               BC.filters.LoopLengthFilter(5, 7),
               BC.filters.StructuredLoopFilter(12, 5, model=0),
@@ -33,7 +33,9 @@ if __name__ == '__main__':
                   BC.file_normalizers.LoopFileNormalizer(),
                  
                   BC.file_normalizers.MakeNativeCopyNormalizer(),
-                  BC.file_normalizers.PackRotamerNormalizer('rosetta_scripts.linuxgccrelease', 'job_scripts/rosetta_repack.xml'), 
+                  BC.file_normalizers.PackRotamerNormalizer('/kortemmelab/home/xingjiepan/Softwares/Rosetta/main/source/bin/rosetta_scripts.linuxgccrelease',
+                    'job_scripts/rosetta_repack.xml', 
+                    '/kortemmelab/home/xingjiepan/Softwares/Rosetta/main/database'), 
                   BC.file_normalizers.LoopTrimNormalizer(10),
                   ] 
  

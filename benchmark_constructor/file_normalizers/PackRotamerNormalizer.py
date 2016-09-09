@@ -20,7 +20,7 @@ class PackRotamerNormalizer(UpdatePDBNormalizer):
              '-run:no_scorefile',
              '-parser:protocol', self.script_file_path,]
 
-      if rosetta_database:
+      if self.rosetta_database:
         cmd += ['-in:path:database', self.rosetta_database]
       
       subprocess.check_call(cmd)
