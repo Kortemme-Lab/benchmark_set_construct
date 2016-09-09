@@ -5,9 +5,10 @@ from .FileNormalizer import UpdatePDBNormalizer
 
 class PackRotamerNormalizer(UpdatePDBNormalizer):
   '''Pack rotamers of the PDB file using Rosetta'''
-  def __init__(self, rosetta_scripts_cmd, script_file_path):
+  def __init__(self, rosetta_scripts_cmd, script_file_path, rosetta_database=None):
     self.rosetta_scripts_cmd = rosetta_scripts_cmd
     self.script_file_path = script_file_path
+    self.rosetta_database = rosetta_database
 
   def apply(self, info_dict):
     
@@ -18,6 +19,9 @@ class PackRotamerNormalizer(UpdatePDBNormalizer):
              '-out:prefix', os.path.dirname(structure_dict['path']) + '/',
              '-run:no_scorefile',
              '-parser:protocol', self.script_file_path,]
+
+      if rosetta_database:
+        cmd += ['-in:path:database', self.rosetta_database]
       
       subprocess.check_call(cmd)
 
