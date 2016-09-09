@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
   # Register filters
 
-  filters = [ BC.filters.ResolutionFilter(1.5),
+  filters = [ BC.filters.ResolutionFilter(2.0),
               BC.filters.LoopModelChainFilter(0, 'A'),
               BC.filters.LoopLengthFilter(5, 7),
               BC.filters.StructuredLoopFilter(12, 5, model=0),
