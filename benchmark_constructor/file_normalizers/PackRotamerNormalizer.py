@@ -18,6 +18,7 @@ class PackRotamerNormalizer(UpdatePDBNormalizer):
              '-in:ignore_unrecognized_res',
              '-out:prefix', os.path.dirname(structure_dict['path']) + '/',
              '-run:no_scorefile',
+             '-detect_disulf', 'false', #To avoid Rosetta crash
              '-parser:protocol', self.script_file_path,]
 
       if self.rosetta_database:
