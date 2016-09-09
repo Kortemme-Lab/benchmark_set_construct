@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
   # Register filters
 
-  filters = [ BC.filters.ResolutionFilter(2.0),
+  filters = [ BC.filters.ResolutionFilter(1.5),
               BC.filters.LoopModelChainFilter(0, 'A'),
               BC.filters.LoopLengthFilter(5, 7),
               BC.filters.StructuredLoopFilter(12, 5, model=0),
@@ -31,9 +31,10 @@ if __name__ == '__main__':
   
   normalizers = [ BC.file_normalizers.RosettaLoopNormalizer(),
                   BC.file_normalizers.LoopFileNormalizer(),
+                 
+                  BC.file_normalizers.MakeNativeCopyNormalizer(),
+                  BC.file_normalizers.PackRotamerNormalizer('rosetta_scripts.linuxgccrelease', 'job_scripts/rosetta_repack.xml'), 
                   BC.file_normalizers.LoopTrimNormalizer(10),
-                  # If you have the clean_pdb.py script from Rosetta tools. Uncomment the following line and change path to where the script is.
-                  #BC.file_normalizers.RosettaCleanPDBNormalizer('/kortemmelab/home/xingjiepan/Softwares/Rosetta/tools/protein_tools/scripts/clean_pdb.py'),
                   ] 
  
   # Apply everything

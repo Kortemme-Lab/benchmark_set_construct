@@ -1,0 +1,14 @@
+<ROSETTASCRIPTS>
+<TASKOPERATIONS>
+  <RestrictToRepacking name="rtrp"/>
+</TASKOPERATIONS>
+
+<MOVERS>
+  <PackRotamersMover name="pack_rot" task_operations="rtrp" />
+</MOVERS>
+
+<PROTOCOLS>
+  <Add mover_name="pack_rot" />
+</PROTOCOLS>
+
+</ROSETTASCRIPTS>
