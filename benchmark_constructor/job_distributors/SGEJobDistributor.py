@@ -17,11 +17,11 @@ class SGEJobDistributor(JobDistributor):
     
     qsub_command = ['qsub',
                     '-cwd',
-                    '-N', self.script_name,
+                    '-N', self.script_name.split('/')[-1],
                     '-t', '1-{0}'.format(num_jobs),
-                    '-l h_rt={0}'.format(time),
-                    '-l mem_free={0}G'.format(mem_free_GB),
-                    '-l scrath={0}G'.format(scratch_space_GB),
+                    '-l', 'h_rt={0}'.format(time),
+                    '-l', 'mem_free={0}G'.format(mem_free_GB),
+                    '-l', 'scratch={0}G'.format(scratch_space_GB),
                     self.script_name,
                     data_set_path,
                     ] + self.script_arguments
