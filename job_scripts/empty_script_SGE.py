@@ -12,6 +12,12 @@ import benchmark_constructor as BC
 
 if __name__ == '__main__':
 
-	print(sys.version)
-	print(os.getcwd())
-	print("I'm doing nothing :P")
+  os.environ['PATH'] = ':'.join(['/netapp/home/xingjiepan/.local/bin',
+                                  os.environ['PATH']])
+
+  print(sys.version)
+  print(sys.path)
+  print(os.getcwd())
+  print(os.environ['PATH'])
+  
+  print("I'm doing nothing :P")
