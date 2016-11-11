@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 from .JobDistributor import JobDistributor
@@ -14,7 +15,9 @@ class SGEJobDistributor(JobDistributor):
   def run(self, num_jobs, time='1:00:00', mem_free_GB=1, scratch_space_GB=1,
           architecture='linux-x64'):
     data_set_path = DataController.create_new_data_set(self.data_set_name)
-    
+    job_output_path = os.path.join(data_set_path, "job_outputs")
+    os.mkdir(job_output_path)
+
     qsub_command = ['qsub',
                     '-cwd',
                     '-N', self.script_name.split('/')[-1],
@@ -22,7 +25,11 @@ class SGEJobDistributor(JobDistributor):
                     '-l', 'h_rt={0}'.format(time),
                     '-l', 'mem_free={0}G'.format(mem_free_GB),
                     '-l', 'scratch={0}G'.format(scratch_space_GB),
+                    '-l', 'arch=linux-x64',
+                    '-o', job_output_path,
+                    '-e', job_output_path,
                     self.script_name,
+                    num_jobs,
                     data_set_path,
                     ] + self.script_arguments
     
