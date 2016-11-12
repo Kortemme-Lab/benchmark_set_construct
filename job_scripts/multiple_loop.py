@@ -30,8 +30,6 @@ if __name__ == '__main__':
   # Register normalizers
   
   normalizers = [ BC.file_normalizers.RosettaLoopNormalizer(),
-                  # If you have the clean_pdb.py script from Rosetta tools. Uncomment the following line and change path to where the script is.
-                  #BC.file_normalizers.RosettaCleanPDBNormalizer('/kortemmelab/home/xingjiepan/Softwares/Rosetta/tools/protein_tools/scripts/clean_pdb.py'),
                   ] 
  
   # Apply everything

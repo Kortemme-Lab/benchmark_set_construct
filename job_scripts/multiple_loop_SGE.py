@@ -40,8 +40,6 @@ if __name__ == '__main__':
   normalizers = [ BC.file_normalizers.RosettaLoopNormalizer(),
                   
                   BC.file_normalizers.MakeNativeCopyNormalizer(),
-                  # If you have the clean_pdb.py script from Rosetta tools. Uncomment the following line and change path to where the script is.
-                  BC.file_normalizers.RosettaCleanPDBNormalizer('/netapp/home/xingjiepan/Rosetta/tools/protein_tools/scripts/clean_pdb.py'),
                   BC.file_normalizers.PackRotamerNormalizer('/netapp/home/xingjiepan/Rosetta/main/source/bin/rosetta_scripts.linuxgccrelease',
                     'job_scripts/rosetta_repack.xml', 
                     '/netapp/home/xingjiepan/Rosetta/main/database'), 
