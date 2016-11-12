@@ -100,6 +100,9 @@ class RosettaCleanPDBNormalizer(RosettaFileNormalizer, UpdatePDBNormalizer):
     self.clean_script_path = clean_script_path
 
   def apply(self, info_dict):
+    print("WARNING: RosettaCleanPDBNormalizer will change the indices of the PDB file.",
+      "This will results in indexing discrepancy between the native PDB file.")
+    
     cwd = os.getcwd()
     
     for structure_dict in info_dict['candidate_list']:
