@@ -34,3 +34,13 @@ class SGEJobDistributor(JobDistributor):
                     ] + self.script_arguments
     
     subprocess.check_call(qsub_command) 
+
+  def set_qb3cluster_environment():
+    '''Set the environment variables for the QB3 shared cluster.'''
+    os.environ['PATH'] = ':'.join(['/netapp/home/xingjiepan/.local/bin', os.environ['PATH']])
+
+    mysql_lib = '/netapp/home/kbarlow/lib/mysql-connector-c-6.1.2-linux-glibc2.5-x86_64/lib'
+    try:
+      os.environ['LD_LIBRARY_PATH'] = ':'.join([mysql_lib, os.environ['LD_LIBRARY_PATH']])
+    except KeyError:
+      os.environ['LD_LIBRARY_PATH'] = mysql_lib
