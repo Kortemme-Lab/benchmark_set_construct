@@ -57,8 +57,10 @@ class RosettaLoopNormalizer(RosettaFileNormalizer, LoopFileNormalizer):
       d = os.path.dirname(structure_dict['path']) 
      
       if 'candidate_loop_list' in structure_dict.keys():
-        nl = structure_dict['name'] + '_rosetta.loop'
-        ns = structure_dict['name'] + '_select_rosetta_loop.pml'
+        rosetta_nl = structure_dict['name'] + '_rosetta.loop'
+        rosetta_ns = structure_dict['name'] + '_select_rosetta_loop.pml'
+        pdb_nl = structure_dict['name'] + '_pdb.loop'
+        pdb_ns = structure_dict['name'] + '_select_pdb_loop.pml'
         
         # Create a new list of loops in Rosetta number
 
@@ -68,8 +70,9 @@ class RosettaLoopNormalizer(RosettaFileNormalizer, LoopFileNormalizer):
           end = structure_dict['Rosetta_residue_map'][loop.model, loop.chain, loop.end]
           rosetta_loop_list.append(Loop(begin, end, loop.chain, loop.model))
 
-        self.normalize_one_file(os.path.join(d, nl), os.path.join(d, ns), rosetta_loop_list)
-      
+        self.normalize_one_file(os.path.join(d, rosetta_nl), os.path.join(d, rosetta_ns), rosetta_loop_list)
+        self.normalize_one_file(os.path.join(d, pdb_nl), os.path.join(d, pdb_ns), structure_dict['candidate_loop_list'])
+
       if 'adjacent_loop_pair_set' in structure_dict.keys():
         nlp = structure_dict['name'] + '_rosetta_adjacent_pairs.loop'
 
