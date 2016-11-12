@@ -16,6 +16,8 @@ from .LoopFilters import DiscardLoopFilter
 
 from .LoopFilters import LoopDepthFilter
 
+from .LoopFilters import LoopPairDepthFilter 
+
 #from . import Loop ###DEBUG
 
 #from .Crystal import create_crystal_packing_file ###DEBUG

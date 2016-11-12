@@ -32,6 +32,7 @@ if __name__ == '__main__':
               BC.filters.StructuredLoopFilter(8, 0, model=0),
               BC.filters.TerminalLoopFilter(5),
               BC.filters.MultipleLoopFilter(4, sequence_separation=5),
+              BC.filters.LoopPairDepthFilter(1),
               ] 
   
   # Register normalizers

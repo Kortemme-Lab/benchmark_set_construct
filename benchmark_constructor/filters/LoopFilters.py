@@ -331,3 +331,33 @@ class LoopDepthFilter(LoopFilter):
 
       structure_dict['candidate_loop_list'] = [ld[0] for ld in sorted(loop_depth_list,
                                                 key=lambda x:x[1])[0:self.num_keep]]
+
+class LoopPairDepthFilter(LoopFilter):
+  '''Keep the num_keep loop pairs with the lowest depth.'''
+  def __init__(self, num_keep):
+    self.num_keep = num_keep
+
+  def apply(self, info_dict):
+    parser = PDB.PDBParser()
+
+    for structure_dict in info_dict['candidate_list']:
+      structure = parser.get_structure('', structure_dict['path'])
+
+      if 'adjacent_loop_pair_set' not in structure_dict.keys(): continue
+      if len(structure_dict['adjacent_loop_pair_set']) <= self.num_keep: continue
+
+      pair_depth_list = []
+      
+      for pair in structure_dict['adjacent_loop_pair_set']:
+        res_list = []
+        for loop in pair:
+          res_list += [structure[loop.model][loop.chain][seqpos] for seqpos in range(loop.begin, loop.end + 1)]
+
+        depth = get_residues_depth(res_list, structure[pair[0].model], structure_dict['path'])
+
+        pair_depth_list.append((pair, depth))
+
+      structure_dict['adjacent_loop_pair_set'] = set(pd[0] for pd in sorted(pair_depth_list,
+                                                      key=lambda x:x[1])[0:self.num_keep])
+
+      structure_dict['candidate_loop_list'] = list(set([loop for pair in structure_dict['adjacent_loop_pair_set'] for loop in pair]))
