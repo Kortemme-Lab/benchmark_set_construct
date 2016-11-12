@@ -38,7 +38,6 @@ if __name__ == '__main__':
   # Register normalizers
   
   normalizers = [ BC.file_normalizers.RosettaLoopNormalizer(),
-                  BC.file_normalizers.LoopFileNormalizer(),
                  
                   BC.file_normalizers.MakeNativeCopyNormalizer(),
                   BC.file_normalizers.RosettaCleanPDBNormalizer('/netapp/home/xingjiepan/Rosetta/tools/protein_tools/scripts/clean_pdb.py'),
