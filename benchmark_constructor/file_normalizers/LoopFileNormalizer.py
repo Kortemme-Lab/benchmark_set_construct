@@ -17,7 +17,7 @@ class LoopFileNormalizer(FileNormalizer):
   def normalize_one_file(self, loop_path, script_path, candidate_loop_list):
     with open(loop_path, 'w') as f:
       for loop in candidate_loop_list:
-        f.write('LOOP {0} {1} {2} 1\n'.format(loop.begin, loop.end, loop.end))
+        f.write('LOOP {0} {1} {2} 0 1\n'.format(loop.begin, loop.end, loop.end))
 
     cmd = 'select loops,'
     for loop in candidate_loop_list:
@@ -34,7 +34,7 @@ class LoopFileNormalizer(FileNormalizer):
   def normalize_adjacent_loop_pairs(self, loop_path, adjacent_loop_pair_set):
     with open(loop_path, 'w') as f:
       for lp in adjacent_loop_pair_set:
-        f.write('LOOP {0} {1} {2} 1\nLOOP {3} {4} {5} 1\n\n'.format(lp[0].begin,
+        f.write('LOOP {0} {1} {2} 0 1\nLOOP {3} {4} {5} 0 1\n\n'.format(lp[0].begin,
                  lp[0].end, lp[0].end, lp[1].begin, lp[1].end, lp[1].end))
 
   def apply(self, info_dict):
