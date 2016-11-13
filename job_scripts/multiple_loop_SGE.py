@@ -39,10 +39,10 @@ if __name__ == '__main__':
   
   normalizers = [ BC.file_normalizers.RosettaLoopNormalizer(),
                   
-                  BC.file_normalizers.MakeNativeCopyNormalizer(),
                   BC.file_normalizers.PackRotamerNormalizer('/netapp/home/xingjiepan/Rosetta/main/source/bin/rosetta_scripts.linuxgccrelease',
                     'job_scripts/rosetta_repack.xml', 
                     '/netapp/home/xingjiepan/Rosetta/main/database'), 
+                  BC.file_normalizers.MakeNativeCopyNormalizer(),
                   BC.file_normalizers.LoopTrimNormalizer(10),
                   ] 
  

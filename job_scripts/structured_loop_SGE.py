@@ -28,8 +28,8 @@ if __name__ == '__main__':
 
   filters = [ BC.filters.ResolutionFilter(2.0),
               BC.filters.LoopModelChainFilter(0, 'A'),
-              BC.filters.LoopLengthFilter(5, 7),
-              BC.filters.StructuredLoopFilter(12, 5, model=0),
+              BC.filters.LoopLengthFilter(5, 11),
+              BC.filters.StructuredLoopFilter(16, 5, model=0),
               BC.filters.LoopCrystalContactFilter(4, model=0, chain_list=['A'], pymol_bin='pymol'),
               BC.filters.TerminalLoopFilter(5),
 							BC.filters.LoopDepthFilter(1),
@@ -39,10 +39,10 @@ if __name__ == '__main__':
   
   normalizers = [ BC.file_normalizers.RosettaLoopNormalizer(),
                  
-                  BC.file_normalizers.MakeNativeCopyNormalizer(),
                   BC.file_normalizers.PackRotamerNormalizer('/netapp/home/xingjiepan/Rosetta/main/source/bin/rosetta_scripts.linuxgccrelease',
                     'job_scripts/rosetta_repack.xml', 
                     '/netapp/home/xingjiepan/Rosetta/main/database'), 
+                  BC.file_normalizers.MakeNativeCopyNormalizer(),
                   BC.file_normalizers.LoopTrimNormalizer(10),
                   ] 
  
