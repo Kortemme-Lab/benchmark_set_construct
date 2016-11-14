@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import Bio.PDB as PDB
 
 from .utilities.metric import get_residues_nearby
@@ -73,10 +74,10 @@ class LoopTrimNormalizer(UpdatePDBNormalizer):
 
   def get_orthogonal_vector(self, vect):
     '''Get an normalized othorgonal vector the the given vector.'''
-    oth_vect = vect ** PDB.Vector(1, 0, 0)
-    if 0 == vect * vect:
-        oth_vect = vect ** PDB.Vector(0, 1, 0)
-    return oth_vect.normalize()
+    oth_vect = np.cross(vect, np.array([1, 0, 0]))
+    if 0 == np.dot(oth_vect, oth_vect):
+      oth_vect = np.cross(vect, np.array([0, 1, 0]))
+    return oth_vect / np.linalg.norm(oth_vect)
 
   def straightify_loop(self, structure, loop):
     line_begin = structure[loop.model][loop.chain][loop.begin]['CA'].coord
@@ -92,7 +93,7 @@ class LoopTrimNormalizer(UpdatePDBNormalizer):
       structure[loop.model][loop.chain][seqpos]['CA'].coord = line_begin \
             + (seqpos - loop.begin) * seg_vect
       structure[loop.model][loop.chain][seqpos]['C'].coord = line_begin \
-            + (seqpos - loop.begin + 1.0/3 ) * seg_vect + oth_vect
+            + (seqpos - loop.begin + 1.0/3 ) * seg_vect + 0.5 * oth_vect
       structure[loop.model][loop.chain][seqpos]['N'].coord = line_begin \
             + (seqpos - loop.begin - 1.0/3 ) * seg_vect - oth_vect
     
