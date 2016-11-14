@@ -71,11 +71,19 @@ class LoopTrimNormalizer(UpdatePDBNormalizer):
     chain.detach_child(residue.get_id())
     chain.add(new_res)
 
+  def get_orthogonal_vector(self, vect):
+    '''Get an normalized othorgonal vector the the given vector.'''
+    oth_vect = vect ** PDB.Vector(1, 0, 0)
+    if 0 == vect * vect:
+        oth_vect = vect ** PDB.Vector(0, 1, 0)
+    return oth_vect.normalize()
+
   def straightify_loop(self, structure, loop):
     line_begin = structure[loop.model][loop.chain][loop.begin]['CA'].coord
     line_end = structure[loop.model][loop.chain][loop.end]['CA'].coord
     line_vect = line_end - line_begin
     seg_vect = line_vect / (loop.end - loop.begin)
+    oth_vect = self.get_orthogonal_vector(line_vect)
 
     structure[loop.model][loop.chain][loop.begin]['C'].coord = line_begin \
         + 1.0/3 * seg_vect
@@ -84,9 +92,9 @@ class LoopTrimNormalizer(UpdatePDBNormalizer):
       structure[loop.model][loop.chain][seqpos]['CA'].coord = line_begin \
             + (seqpos - loop.begin) * seg_vect
       structure[loop.model][loop.chain][seqpos]['C'].coord = line_begin \
-            + (seqpos - loop.begin + 1.0/3 ) * seg_vect
+            + (seqpos - loop.begin + 1.0/3 ) * seg_vect + oth_vect
       structure[loop.model][loop.chain][seqpos]['N'].coord = line_begin \
-            + (seqpos - loop.begin - 1.0/3 ) * seg_vect
+            + (seqpos - loop.begin - 1.0/3 ) * seg_vect - oth_vect
     
     structure[loop.model][loop.chain][loop.end]['N'].coord = line_end \
         - 1.0/3 * seg_vect
