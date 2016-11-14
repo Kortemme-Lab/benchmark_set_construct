@@ -11,3 +11,5 @@ from .RosettaFileNormalizer import RosettaLoopNormalizer
 from .RosettaFileNormalizer import RosettaCleanPDBNormalizer
 
 from .PackRotamerNormalizer import PackRotamerNormalizer
+
+from .PymolCleanPDBNormalizer import PymolCleanPDBNormalizer
