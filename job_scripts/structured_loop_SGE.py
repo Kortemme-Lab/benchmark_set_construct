@@ -44,6 +44,7 @@ if __name__ == '__main__':
                     '/netapp/home/xingjiepan/Rosetta/main/database'), 
                   BC.file_normalizers.MakeNativeCopyNormalizer(),
                   BC.file_normalizers.LoopTrimNormalizer(10),
+                  BC.file_normalizers.PymolCleanPDBNormalizer(),
                   ] 
  
   # Apply everything
