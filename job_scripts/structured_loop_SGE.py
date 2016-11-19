@@ -42,6 +42,7 @@ if __name__ == '__main__':
                   BC.file_normalizers.PackRotamerNormalizer('/netapp/home/xingjiepan/Rosetta/main/source/bin/rosetta_scripts.linuxgccrelease',
                     'job_scripts/rosetta_repack.xml', 
                     '/netapp/home/xingjiepan/Rosetta/main/database'), 
+                  BC.file_normalizers.FastaFileNormalizer(),
                   BC.file_normalizers.MakeNativeCopyNormalizer(),
                   BC.file_normalizers.LoopTrimNormalizer(10),
                   BC.file_normalizers.PymolCleanPDBNormalizer(),

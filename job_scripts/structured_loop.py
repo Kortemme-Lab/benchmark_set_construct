@@ -31,7 +31,9 @@ if __name__ == '__main__':
   
   normalizers = [ BC.file_normalizers.RosettaLoopNormalizer(),
                   BC.file_normalizers.LoopFileNormalizer(),
-                 
+                
+                  BC.file_normalizers.FastaFileNormalizer(),
+
                   BC.file_normalizers.MakeNativeCopyNormalizer(),
                   #BC.file_normalizers.PackRotamerNormalizer('/kortemmelab/home/xingjiepan/Softwares/Rosetta/main/source/bin/rosetta_scripts.linuxgccrelease',
                   #  'job_scripts/rosetta_repack.xml', 

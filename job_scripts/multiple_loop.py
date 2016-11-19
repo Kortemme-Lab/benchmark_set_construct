@@ -30,6 +30,7 @@ if __name__ == '__main__':
   # Register normalizers
   
   normalizers = [ BC.file_normalizers.RosettaLoopNormalizer(),
+                  BC.file_normalizers.FastaFileNormalizer(),
                   ] 
  
   # Apply everything
